@@ -1,0 +1,53 @@
+- [11/9/25] Il punto di vista della fondazione Ugo Bordoni sulle sfide dell'IA
+  	https://www.fub.it/lintelligenza-artificiale-nelle-organizzazioni-sfide-opportunita-e-approcci-operativi/
+
+- [15/09] pillole di prompt engineering  e contex engineering 
+
+- [15/09] la causa per violazione dei diritti d'autore di Antropic ( https://g.co/gemini/share/a1c1c66dcb03 )
+
+- [15/09] Demo Data Pipeline Sud America (?)
+
+- [15/09/25] Digital Talk - Dipartimento trasformazione digitale
+
+- [22/09/2025] Coscienza e AI : funzionalismo, IIT, Panpsichismo
+
+- [23/09/2025] Morte della SEO? (vedi notebookLM)
+
+- [29/09/2025] Dieci nuovi mestieri Agentic (vedi notebookLM)
+
+- [29/09/2025] perché gli LLM allucinano (vedi notebookLM)
+
+- [29/09/2025] IA nelle scuole
+	https://www.forumpa.it/riforma-pa/lintelligenza-artificiale-entra-nelle-scuole-italiane-ecco-le-linee-guida-del-ministero/?utm_campaign=fpa_nl_12_09_2025&utm_source=fpa_nl_12_09_2025&utm_medium=email&sfdcid=0033Y00003TKGFKQA5
+
+- [09/10/2025] INAPP : https://www.linkedin.com/posts/verso-un-opac-semantico-la-pubblicazione-share-7379516442314096640-_l4B?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAPWLy8BW6IZhp75ajeCoOM3VuT3BjcjI2s
+
+- [31/10/2025] critica all'AI e linguaggio usato : https://substack.com/@erikjlarson/note/c-162772910?utm_source=notes-share-action&r=3p4bvx
+	ErikJLarsson : https://www.amazon.it/dp/8835136113?_encoding=UTF8&psc=1&ref_=cm_sw_r_ffobk_cp_ud_dp_1963431SPKRWNGDJ2A61&bestFormat=true
+
+
+- ipnocrazia (vedi WA con serafini su Cell ufficio)
+
+- The Big LLM Architecture Comparison (vedi notebookLM)	
+
+- I Modelli IA: Predizione Senza Comprensione (vedi notebookLM)
+
+- AI Act una pillola per ogni aspetto importante
+	https://artificialintelligenceact.eu/ai-act-explorer/
+	https://notebooklm.google.com/notebook/93305a75-7bc9-4949-a842-05aa11be3929
+
+- sentire questo intervento di barricco e valutare
+	https://www.youtube.com/watch?v=0_fIs9KMHOU
+
+- SpikingBrain : https://notebooklm.google.com/notebook/32b2375e-fc30-4cf7-9737-e9fbbee63a95
+
+- https://www.ai-supremacy.com/p/world-foundational-models-accelerating-humanoid-robotics-future?utm_source=substack&utm_medium=email
+
+- discorso demo e data Governance ? (Menarini Esercito)
+
+- Jessica Talisman?
+
+- ringraziamenti o encomi ?
+
+- Sfide?
+

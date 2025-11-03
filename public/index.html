@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter Editor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Newsletter Editor</h1>
+        <button id="newNewsletterBtn" class="btn btn-primary">+ Nuova Newsletter</button>
+      </div>
+      <div class="newsletter-list" id="newsletterList">
+        <!-- Lista newsletter verrà caricata qui -->
+      </div>
+    </aside>
+
+    <!-- Main Editor Area -->
+    <main class="editor-area">
+      <div id="welcomeScreen" class="welcome-screen">
+        <h2>Benvenuto nell'Editor Newsletter</h2>
+        <p>Seleziona una newsletter dalla lista o creane una nuova</p>
+      </div>
+
+      <div id="editorScreen" class="editor-screen hidden">
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input type="text" id="newsletterTitle" class="newsletter-title-input" placeholder="Titolo Newsletter">
+          <div class="toolbar-actions">
+            <span class="status-badge" id="statusBadge">Draft</span>
+            <button id="saveBtn" class="btn btn-secondary">Salva</button>
+            <button id="publishBtn" class="btn btn-success">Pubblica</button>
+            <button id="exportBtn" class="btn btn-primary">Esporta HTML</button>
+            <button id="duplicateNewsletterBtn" class="btn btn-secondary">Duplica</button>
+            <button id="deleteNewsletterBtn" class="btn btn-danger">Elimina</button>
+          </div>
+        </div>
+
+        <!-- Header Logo Section -->
+        <div class="section header-section">
+          <h3>Header Logo (Almawave o altro)</h3>
+          <div class="header-upload">
+            <input type="file" id="headerUpload" accept="image/*" style="display: none;">
+            <button class="btn btn-secondary" onclick="document.getElementById('headerUpload').click()">Carica Logo Header</button>
+            <div id="headerPreview" class="image-preview"></div>
+          </div>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="section hero-section">
+          <h3>Hero Section (Titolo e Sottotitolo Newsletter)</h3>
+          <div class="form-group">
+            <label>Titolo Newsletter (es: "OD&SW -News #5 [06/10/25 - 10/10/25]")</label>
+            <input type="text" id="heroTitle" class="form-control" placeholder="Titolo della newsletter">
+          </div>
+          <div class="form-group">
+            <label>Sottotitolo/Introduzione</label>
+            <textarea id="heroSubtitle" class="form-control" rows="3" placeholder="Testo introduttivo della newsletter"></textarea>
+          </div>
+          <div class="banner-upload">
+            <label>Immagine Hero (opzionale)</label>
+            <input type="file" id="bannerUpload" accept="image/*" style="display: none;">
+            <button class="btn btn-secondary" onclick="document.getElementById('bannerUpload').click()">Carica Immagine Hero</button>
+            <div id="bannerPreview" class="image-preview"></div>
+          </div>
+        </div>
+
+        <!-- Posts Section -->
+        <div class="section posts-section">
+          <div class="section-header">
+            <h3>Post Newsletter</h3>
+            <div>
+              <button id="addDoublePostBtn" class="btn btn-primary">+ Post Doppia Colonna</button>
+              <button id="addSinglePairBtn" class="btn btn-primary">+ Coppia Post Singoli</button>
+            </div>
+          </div>
+          <div class="info-box">
+            <strong>Nota:</strong>
+            <ul>
+              <li><strong>Post Doppia Colonna:</strong> Immagine a sinistra, Titolo+Testo a destra</li>
+              <li><strong>Coppia Post Singoli:</strong> Due post affiancati, ognuno con immagine sopra e titolo+testo sotto</li>
+            </ul>
+          </div>
+          <div id="postsList" class="posts-list">
+            <!-- I post verranno aggiunti qui -->
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="section footer-section">
+          <h3>Footer</h3>
+          <div class="form-group">
+            <label>Testo del footer</label>
+            <textarea id="footerText" class="form-control" rows="3" placeholder="Testo del footer"></textarea>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+  </div>
+
+  <!-- Modal per Post Doppia Colonna -->
+  <div id="doublePostModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Post Doppia Colonna</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="doublePostId">
+        <div class="form-group">
+          <label>Immagine Sinistra</label>
+          <input type="file" id="doublePostImage" accept="image/*" class="form-control">
+          <div id="doublePostImagePreview" class="image-preview"></div>
+        </div>
+        <div class="form-group">
+          <label>Titolo (Destra)</label>
+          <input type="text" id="doublePostTitle" class="form-control" placeholder="Titolo del post">
+        </div>
+        <div class="form-group">
+          <label>Contenuto (Destra)</label>
+          <textarea id="doublePostContent" class="form-control" rows="6" placeholder="Contenuto del post"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-modal btn btn-secondary">Annulla</button>
+        <button id="saveDoublePostBtn" class="btn btn-primary">Salva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal per Coppia Post Singoli -->
+  <div id="singlePairModal" class="modal hidden">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Coppia Post Singoli (Affiancati)</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="singlePairPostId">
+        <div class="two-posts-grid">
+          <!-- Post 1 -->
+          <div class="post-form">
+            <h4>Post 1 (Sinistra)</h4>
+            <div class="form-group">
+              <label>Immagine</label>
+              <input type="file" id="singlePost1Image" accept="image/*" class="form-control">
+              <div id="singlePost1ImagePreview" class="image-preview"></div>
+            </div>
+            <div class="form-group">
+              <label>Titolo</label>
+              <input type="text" id="singlePost1Title" class="form-control" placeholder="Titolo post 1">
+            </div>
+            <div class="form-group">
+              <label>Contenuto</label>
+              <textarea id="singlePost1Content" class="form-control" rows="4" placeholder="Contenuto post 1"></textarea>
+            </div>
+          </div>
+
+          <!-- Post 2 -->
+          <div class="post-form">
+            <h4>Post 2 (Destra)</h4>
+            <div class="form-group">
+              <label>Immagine</label>
+              <input type="file" id="singlePost2Image" accept="image/*" class="form-control">
+              <div id="singlePost2ImagePreview" class="image-preview"></div>
+            </div>
+            <div class="form-group">
+              <label>Titolo</label>
+              <input type="text" id="singlePost2Title" class="form-control" placeholder="Titolo post 2">
+            </div>
+            <div class="form-group">
+              <label>Contenuto</label>
+              <textarea id="singlePost2Content" class="form-control" rows="4" placeholder="Contenuto post 2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-modal btn btn-secondary">Annulla</button>
+        <button id="saveSinglePairBtn" class="btn btn-primary">Salva Coppia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal per Nuova Newsletter -->
+  <div id="newNewsletterModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Nuova Newsletter</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Titolo</label>
+          <input type="text" id="newNewsletterTitle" class="form-control" placeholder="Titolo della newsletter">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelNewNewsletterBtn" class="btn btn-secondary">Annulla</button>
+        <button id="createNewsletterBtn" class="btn btn-primary">Crea</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
