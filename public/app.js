@@ -167,6 +167,7 @@ async function loadNewsletter(id) {
 }
 
 // Create New Newsletter
+// Create New Newsletter
 async function createNewsletter() {
   const title = document.getElementById('newNewsletterTitle').value.trim();
 

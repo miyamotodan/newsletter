@@ -61,6 +61,25 @@ function initDatabase() {
     image2 TEXT,
     FOREIGN KEY (newsletter_id) REFERENCES newsletters(id) ON DELETE CASCADE
   )`);
+
+  // Migrazione per aggiungere la colonna footer_text se non esiste
+  db.all("PRAGMA table_info(newsletters)", (err, columns) => {
+    if (err) {
+      console.error('Errore verifica struttura tabella:', err);
+      return;
+    }
+
+    const hasFooterText = columns.some(col => col.name === 'footer_text');
+    if (!hasFooterText) {
+      db.run('ALTER TABLE newsletters ADD COLUMN footer_text TEXT', (err) => {
+        if (err) {
+          console.error('Errore aggiunta colonna footer_text:', err);
+        } else {
+          console.log('Colonna footer_text aggiunta alla tabella newsletters');
+        }
+      });
+    }
+  });
 }
 
 // API Routes
@@ -123,7 +142,7 @@ app.post('/api/newsletters', (req, res) => {
 
   const sql = 'INSERT INTO newsletters (title, footer_text) VALUES (?, ?)';
   console.log('SQL da eseguire:', sql);
-  const defaultFooter = 'Ricevi questa email perché sei nella <b>Practice OD&SW</b> - Alamawave <br><span class="footer-copy">© 2025 DDP</span>';
+  const defaultFooter = '';
   console.log('Parametri:', [title, defaultFooter]);
 
   db.run(sql, [title, defaultFooter], function(err) {
