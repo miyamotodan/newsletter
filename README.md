@@ -4,7 +4,8 @@ Editor completo per creare, gestire e archiviare newsletter HTML con supporto pe
 
 ## Caratteristiche
 
-- ✅ **Header Personalizzabile**: Logo aziendale (es. Almawave) nell'header
+- ✅ **Header Personalizzabile**: Logo aziendale nell'header
+- ✅ **Footer Personalizzabile**: testo del footer
 - ✅ **Hero Section**: Titolo newsletter e sottotitolo/introduzione
 - ✅ **Editor Visuale**: Interfaccia intuitiva per creare newsletter
 - ✅ **Gestione Stati**: Draft e Pubblicato con toggle bidirezionale (Pubblica/Spubblica)
@@ -12,10 +13,9 @@ Editor completo per creare, gestire e archiviare newsletter HTML con supporto pe
 - ✅ **Coppia Post Singoli**: Due post affiancati con immagine sopra e titolo+testo sotto
 - ✅ **Duplica Newsletter**: Copia completa di newsletter con tutti i post
 - ✅ **Immagini Base64**: Tutte le immagini codificate per Outlook
-- ✅ **Preview in Tempo Reale**: Vedi come apparirà la newsletter
-- ✅ **Esporta HTML**: Copia-incolla diretto su Outlook
+- ✅ **Esporta HTML**: Copia-incolla diretto su Outlook una volta che hai aperto il file HTML esportto sul browser
 - ✅ **Archiviazione**: Database SQLite per tutte le newsletter
-- ✅ **Eliminazione Cascata**: Eliminando una newsletter vengono rimossi anche tutti i post collegati
+- ✅ **Eliminazione Cascata**: Eliminando una newsletter vengono rimossi anche tutti i post collegati (su sqlite devono essere attivate le FK)
 
 ## Installazione
 
@@ -46,13 +46,13 @@ npm run dev
 
 4. **Personalizza l'intestazione**:
    - Carica il logo aziendale nell'Header
-   - Inserisci il titolo della newsletter (es. "OD&SW -News #5 [06/10/25 - 10/10/25]")
+   - Inserisci il titolo della newsletter
    - Aggiungi il sottotitolo/introduzione
    - (Opzionale) Carica un'immagine hero
 
 5. **Aggiungi post**:
-   - **Post Doppia Colonna**: Immagine a sinistra, titolo+testo a destra (come il post dei Simpson)
-   - **Coppia Post Singoli**: Due post affiancati, ciascuno con immagine sopra e titolo+testo sotto (come i post INAPP e LOD Milano)
+   - **Post Doppia Colonna**: Immagine a sinistra, titolo+testo a destra 
+   - **Coppia Post Singoli**: Due post affiancati, ciascuno con immagine sopra e titolo+testo sotto 
 
 6. **Gestisci la newsletter**:
    - **Salva**: Salva le modifiche mantenendo lo stato corrente
@@ -101,10 +101,10 @@ NEWSLETTER/
 
 La newsletter segue lo stesso schema del template fornito:
 
-1. **Header**: Logo aziendale (es. banner blu Almawave)
+1. **Header**: Logo aziendale 
 2. **Hero Section**:
    - Immagine hero (opzionale)
-   - Titolo newsletter (es. "OD&SW -News #5 [06/10/25 - 10/10/25]")
+   - Titolo newsletter 
    - Sottotitolo/introduzione
 3. **Post Doppia Colonna**: Immagine a sinistra (50%), titolo+testo a destra (50%)
 4. **Coppia Post Singoli**: Due post affiancati, ciascuno con immagine sopra e titolo+testo sotto
@@ -146,7 +146,7 @@ La newsletter segue lo stesso schema del template fornito:
 - Il database SQLite è locale e portatile
 - Foreign keys abilitate per garantire l'eliminazione a cascata dei post
 - La duplicazione crea una copia completa con titolo "(Copia)" e stato draft
-- Footer personalizzato: "Ricevi questa email perché sei nella Practice OD&SW - Alamawave"
+- Footer personalizzato: "Ricevi questa email perché ...."
 
 ## Troubleshooting
 
