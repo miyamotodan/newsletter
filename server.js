@@ -59,6 +59,7 @@ function initDatabase() {
     title2 TEXT,
     content2 TEXT,
     image2 TEXT,
+    stack_width INTEGER DEFAULT 50,
     FOREIGN KEY (newsletter_id) REFERENCES newsletters(id) ON DELETE CASCADE
   )`);
 
@@ -76,6 +77,25 @@ function initDatabase() {
           console.error('Errore aggiunta colonna footer_text:', err);
         } else {
           console.log('Colonna footer_text aggiunta alla tabella newsletters');
+        }
+      });
+    }
+  });
+
+  // Migrazione per aggiungere la colonna stack_width se non esiste
+  db.all("PRAGMA table_info(posts)", (err, columns) => {
+    if (err) {
+      console.error('Errore verifica struttura tabella posts:', err);
+      return;
+    }
+
+    const hasStackWidth = columns.some(col => col.name === 'stack_width');
+    if (!hasStackWidth) {
+      db.run('ALTER TABLE posts ADD COLUMN stack_width INTEGER DEFAULT 50', (err) => {
+        if (err) {
+          console.error('Errore aggiunta colonna stack_width:', err);
+        } else {
+          console.log('Colonna stack_width aggiunta alla tabella posts');
         }
       });
     }
@@ -252,9 +272,9 @@ app.post('/api/newsletters/:id/duplicate', (req, res) => {
         let hasError = false;
 
         posts.forEach(post => {
-          const postSql = 'INSERT INTO posts (newsletter_id, position, layout, title, content, image, title2, content2, image2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+          const postSql = 'INSERT INTO posts (newsletter_id, position, layout, title, content, image, title2, content2, image2, stack_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-          db.run(postSql, [newNewsletterId, post.position, post.layout, post.title, post.content, post.image, post.title2, post.content2, post.image2], function(err) {
+          db.run(postSql, [newNewsletterId, post.position, post.layout, post.title, post.content, post.image, post.title2, post.content2, post.image2, post.stack_width || 50], function(err) {
             if (err && !hasError) {
               hasError = true;
               console.error('❌ Errore duplicazione post:', err.message);
@@ -290,11 +310,11 @@ app.delete('/api/newsletters/:id', (req, res) => {
 // POST - Aggiungi post a newsletter
 app.post('/api/newsletters/:id/posts', (req, res) => {
   const { id } = req.params;
-  const { layout, title, content, image, title2, content2, image2, position } = req.body;
+  const { layout, title, content, image, title2, content2, image2, position, stack_width } = req.body;
 
-  const sql = 'INSERT INTO posts (newsletter_id, layout, title, content, image, title2, content2, image2, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const sql = 'INSERT INTO posts (newsletter_id, layout, title, content, image, title2, content2, image2, position, stack_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-  db.run(sql, [id, layout, title, content, image, title2, content2, image2, position], function(err) {
+  db.run(sql, [id, layout, title, content, image, title2, content2, image2, position, stack_width || 50], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -309,7 +329,8 @@ app.post('/api/newsletters/:id/posts', (req, res) => {
       title2,
       content2,
       image2,
-      position
+      position,
+      stack_width: stack_width || 50
     });
   });
 });
@@ -317,11 +338,11 @@ app.post('/api/newsletters/:id/posts', (req, res) => {
 // PUT - Aggiorna post
 app.put('/api/posts/:id', (req, res) => {
   const { id } = req.params;
-  const { layout, title, content, image, title2, content2, image2, position } = req.body;
+  const { layout, title, content, image, title2, content2, image2, position, stack_width } = req.body;
 
-  const sql = 'UPDATE posts SET layout = ?, title = ?, content = ?, image = ?, title2 = ?, content2 = ?, image2 = ?, position = ? WHERE id = ?';
+  const sql = 'UPDATE posts SET layout = ?, title = ?, content = ?, image = ?, title2 = ?, content2 = ?, image2 = ?, position = ?, stack_width = ? WHERE id = ?';
 
-  db.run(sql, [layout, title, content, image, title2, content2, image2, position, id], function(err) {
+  db.run(sql, [layout, title, content, image, title2, content2, image2, position, stack_width || 50, id], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;

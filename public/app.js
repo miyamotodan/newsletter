@@ -69,6 +69,15 @@ function setupEventListeners() {
   document.getElementById('singlePost1Image').addEventListener('change', (e) => handleImagePreview(e, 'singlePost1ImagePreview'));
   document.getElementById('singlePost2Image').addEventListener('change', (e) => handleImagePreview(e, 'singlePost2ImagePreview'));
 
+  // Stack width sliders
+  document.getElementById('doubleStackWidth').addEventListener('input', (e) => {
+    document.getElementById('doubleStackWidthValue').textContent = e.target.value;
+  });
+
+  document.getElementById('singlePairStackWidth').addEventListener('input', (e) => {
+    document.getElementById('singlePairStackWidthValue').textContent = e.target.value;
+  });
+
   // Close modals
   document.querySelectorAll('.close-modal, .cancel-modal').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -359,6 +368,8 @@ async function openEditModal(postId) {
     document.getElementById('doublePostTitle').value = post.title || '';
     document.getElementById('doublePostContent').value = post.content || '';
     document.getElementById('doublePostImagePreview').innerHTML = post.image ? `<img src="${post.image}" alt="Preview" style="max-width: 200px;">` : '';
+    document.getElementById('doubleStackWidth').value = post.stack_width || 50;
+    document.getElementById('doubleStackWidthValue').textContent = post.stack_width || 50;
     showModal('doublePostModal');
   } else if (post.layout === 'single-pair') {
     document.getElementById('singlePairPostId').value = post.id;
@@ -368,6 +379,8 @@ async function openEditModal(postId) {
     document.getElementById('singlePost2Title').value = post.title2 || '';
     document.getElementById('singlePost2Content').value = post.content2 || '';
     document.getElementById('singlePost2ImagePreview').innerHTML = post.image2 ? `<img src="${post.image2}" alt="Preview" style="max-width: 200px;">` : '';
+    document.getElementById('singlePairStackWidth').value = post.stack_width || 50;
+    document.getElementById('singlePairStackWidthValue').textContent = post.stack_width || 50;
     showModal('singlePairModal');
   }
 }
@@ -379,6 +392,8 @@ function openDoublePostModal() {
   document.getElementById('doublePostTitle').value = '';
   document.getElementById('doublePostContent').value = '';
   document.getElementById('doublePostImagePreview').innerHTML = '';
+  document.getElementById('doubleStackWidth').value = 50;
+  document.getElementById('doubleStackWidthValue').textContent = 50;
   showModal('doublePostModal');
 }
 
@@ -395,6 +410,9 @@ function openSinglePairModal() {
   document.getElementById('singlePost2Content').value = '';
   document.getElementById('singlePost2ImagePreview').innerHTML = '';
 
+  document.getElementById('singlePairStackWidth').value = 50;
+  document.getElementById('singlePairStackWidthValue').textContent = 50;
+
   showModal('singlePairModal');
 }
 
@@ -406,6 +424,7 @@ async function saveDoublePost() {
   const imageFile = document.getElementById('doublePostImage').files[0];
   const title = document.getElementById('doublePostTitle').value.trim();
   const content = document.getElementById('doublePostContent').value.trim();
+  const stackWidth = parseInt(document.getElementById('doubleStackWidth').value);
 
   let image = document.querySelector('#doublePostImagePreview img')?.src || null;
   if (imageFile) {
@@ -420,7 +439,8 @@ async function saveDoublePost() {
     title2: null,
     content2: null,
     image2: null,
-    position: postId ? currentPosts.find(p => p.id == postId).position : currentPosts.length
+    position: postId ? currentPosts.find(p => p.id == postId).position : currentPosts.length,
+    stack_width: stackWidth
   };
 
   const url = postId ? `${API_URL}/posts/${postId}` : `${API_URL}/newsletters/${currentNewsletter.id}/posts`;
@@ -456,6 +476,8 @@ async function saveSinglePair() {
   const title2 = document.getElementById('singlePost2Title').value.trim();
   const content2 = document.getElementById('singlePost2Content').value.trim();
 
+  const stackWidth = parseInt(document.getElementById('singlePairStackWidth').value);
+
   let image1 = document.querySelector('#singlePost1ImagePreview img')?.src || null;
   if (image1File) {
     image1 = await fileToBase64(image1File);
@@ -474,7 +496,8 @@ async function saveSinglePair() {
     title2: title2,
     content2: content2,
     image2: image2,
-    position: postId ? currentPosts.find(p => p.id == postId).position : currentPosts.length
+    position: postId ? currentPosts.find(p => p.id == postId).position : currentPosts.length,
+    stack_width: stackWidth
   };
 
   const url = postId ? `${API_URL}/posts/${postId}` : `${API_URL}/newsletters/${currentNewsletter.id}/posts`;
@@ -517,17 +540,24 @@ function renderPosts() {
     const card = document.createElement('div');
     card.className = 'post-card';
 
+    const leftWidth = post.stack_width || 50;
+    const rightWidth = 100 - leftWidth;
+    const isCustomWidth = leftWidth !== 50;
+
     if (post.layout === 'double') {
       card.innerHTML = `
         <div class="post-position">${index + 1}</div>
         <div class="post-card-header">
-          <span class="post-layout-badge">Doppia Colonna</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="post-layout-badge">Doppia Colonna</span>
+            ${isCustomWidth ? `<span class="post-layout-badge" style="background: #17a2b8; font-size: 12px;">${leftWidth}% / ${rightWidth}%</span>` : ''}
+          </div>
           <div class="post-actions">
             <button class="btn btn-secondary" onclick="openEditModal(${post.id})">Modifica</button>
             <button class="btn btn-danger" onclick="deletePost(${post.id})">Elimina</button>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;">
+        <div style="display: grid; grid-template-columns: ${leftWidth}% ${rightWidth}%; gap: 20px; align-items: start;">
           <div>
             ${post.image ? `<img src="${post.image}" style="width: 100%; border-radius: 6px;" alt="Post image">` : '<div style="width: 100%; height: 150px; background: #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center;">Nessuna immagine</div>'}
           </div>
@@ -541,13 +571,16 @@ function renderPosts() {
       card.innerHTML = `
         <div class="post-position">${index + 1}</div>
         <div class="post-card-header">
-          <span class="post-layout-badge">Coppia Post Singoli</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="post-layout-badge">Coppia Post Singoli</span>
+            ${isCustomWidth ? `<span class="post-layout-badge" style="background: #17a2b8; font-size: 12px;">${leftWidth}% / ${rightWidth}%</span>` : ''}
+          </div>
           <div class="post-actions">
             <button class="btn btn-secondary" onclick="openEditModal(${post.id})">Modifica</button>
             <button class="btn btn-danger" onclick="deletePost(${post.id})">Elimina</button>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="display: grid; grid-template-columns: ${leftWidth}% ${rightWidth}%; gap: 20px;">
           <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
             ${post.image ? `<img src="${post.image}" style="width: 100%; margin: 10px 0; border-radius: 6px;" alt="Post 1">` : ''}
             <h4 style="margin: 10px 0 5px 0;">${post.title || 'Senza titolo'}</h4>
@@ -595,6 +628,9 @@ function generateNewsletterHTML() {
   let postsHTML = '';
 
   currentPosts.forEach(post => {
+    const leftWidth = post.stack_width || 50;
+    const rightWidth = 100 - leftWidth;
+
     if (post.layout === 'double') {
       // Post doppia colonna: immagine sinistra, testo destra
       postsHTML += `
@@ -603,10 +639,10 @@ function generateNewsletterHTML() {
               <td class="p16 two-columns">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
-                    <td class="stack" width="50%" valign="top">
+                    <td class="stack" width="${leftWidth}%" valign="top">
                       ${post.image ? `<img src="${post.image}" class="column-img" style="width:100%; height:auto; display:block;">` : ''}
                     </td>
-                    <td class="stack" width="50%" valign="top" style="padding-left: 12px;">
+                    <td class="stack" width="${rightWidth}%" valign="top" style="padding-left: 12px;">
                       <div class="column-title">${post.title || ''}</div>
                       <div class="column-text">${post.content || ''}</div>
                     </td>
@@ -623,12 +659,12 @@ function generateNewsletterHTML() {
               <td class="p16 two-columns">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
-                    <td class="stack" width="50%" valign="top">
+                    <td class="stack" width="${leftWidth}%" valign="top">
                       ${post.image ? `<img src="${post.image}" class="column-img" style="width:100%; height:auto; display:block;">` : ''}
                       <div class="column-title">${post.title || ''}</div>
                       <div class="column-text">${post.content || ''}</div>
                     </td>
-                    <td class="stack" width="50%" valign="top" style="padding-left: 12px;">
+                    <td class="stack" width="${rightWidth}%" valign="top" style="padding-left: 12px;">
                       ${post.image2 ? `<img src="${post.image2}" class="column-img" style="width:100%; height:auto; display:block;">` : ''}
                       <div class="column-title">${post.title2 || ''}</div>
                       <div class="column-text">${post.content2 || ''}</div>

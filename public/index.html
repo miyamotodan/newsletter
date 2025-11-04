@@ -114,6 +114,11 @@
       <div class="modal-body">
         <input type="hidden" id="doublePostId">
         <div class="form-group">
+          <label>Larghezza Colonna Sinistra: <span id="doubleStackWidthValue">50</span>%</label>
+          <input type="range" id="doubleStackWidth" min="20" max="80" value="50" class="form-control" style="width: 100%;">
+          <small style="color: #666;">Imposta la larghezza della colonna sinistra (la destra sarà il complementare)</small>
+        </div>
+        <div class="form-group">
           <label>Immagine Sinistra</label>
           <input type="file" id="doublePostImage" accept="image/*" class="form-control">
           <div id="doublePostImagePreview" class="image-preview"></div>
@@ -143,6 +148,11 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="singlePairPostId">
+        <div class="form-group">
+          <label>Larghezza Colonna Sinistra: <span id="singlePairStackWidthValue">50</span>%</label>
+          <input type="range" id="singlePairStackWidth" min="20" max="80" value="50" class="form-control" style="width: 100%;">
+          <small style="color: #666;">Imposta la larghezza della colonna sinistra (la destra sarà il complementare)</small>
+        </div>
         <div class="two-posts-grid">
           <!-- Post 1 -->
           <div class="post-form">
