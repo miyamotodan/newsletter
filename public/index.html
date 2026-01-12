@@ -76,6 +76,7 @@
             <div>
               <button id="addDoublePostBtn" class="btn btn-primary">+ Post Doppia Colonna</button>
               <button id="addSinglePairBtn" class="btn btn-primary">+ Coppia Post Singoli</button>
+              <button id="addFullWidthPostBtn" class="btn btn-primary">+ Post Full Width</button>
             </div>
           </div>
           <div class="info-box">
@@ -83,6 +84,7 @@
             <ul>
               <li><strong>Post Doppia Colonna:</strong> Immagine a sinistra, Titolo+Testo a destra</li>
               <li><strong>Coppia Post Singoli:</strong> Due post affiancati, ognuno con immagine sopra e titolo+testo sotto</li>
+              <li><strong>Post Full Width:</strong> Immagine sopra e titolo+testo sotto, a tutta larghezza</li>
             </ul>
           </div>
           <div id="postsList" class="posts-list">
@@ -194,6 +196,36 @@
       <div class="modal-footer">
         <button class="cancel-modal btn btn-secondary">Annulla</button>
         <button id="saveSinglePairBtn" class="btn btn-primary">Salva Coppia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal per Post Full Width -->
+  <div id="fullWidthPostModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Post Full Width</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="fullWidthPostId">
+        <div class="form-group">
+          <label>Immagine (opzionale)</label>
+          <input type="file" id="fullWidthPostImage" accept="image/*" class="form-control">
+          <div id="fullWidthPostImagePreview" class="image-preview"></div>
+        </div>
+        <div class="form-group">
+          <label>Titolo</label>
+          <input type="text" id="fullWidthPostTitle" class="form-control" placeholder="Titolo">
+        </div>
+        <div class="form-group">
+          <label>Contenuto</label>
+          <textarea id="fullWidthPostContent" class="form-control" rows="6" placeholder="Contenuto"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-modal btn btn-secondary">Annulla</button>
+        <button id="saveFullWidthPostBtn" class="btn btn-primary">Salva</button>
       </div>
     </div>
   </div>

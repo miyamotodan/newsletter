@@ -58,16 +58,24 @@ function setupEventListeners() {
     openSinglePairModal();
   });
 
+  document.getElementById('addFullWidthPostBtn').addEventListener('click', () => {
+    openFullWidthPostModal();
+  });
+
   // Save Double Post
   document.getElementById('saveDoublePostBtn').addEventListener('click', saveDoublePost);
 
   // Save Single Pair
   document.getElementById('saveSinglePairBtn').addEventListener('click', saveSinglePair);
 
+  // Save Full Width Post
+  document.getElementById('saveFullWidthPostBtn').addEventListener('click', saveFullWidthPost);
+
   // Post Image Previews
   document.getElementById('doublePostImage').addEventListener('change', (e) => handleImagePreview(e, 'doublePostImagePreview'));
   document.getElementById('singlePost1Image').addEventListener('change', (e) => handleImagePreview(e, 'singlePost1ImagePreview'));
   document.getElementById('singlePost2Image').addEventListener('change', (e) => handleImagePreview(e, 'singlePost2ImagePreview'));
+  document.getElementById('fullWidthPostImage').addEventListener('change', (e) => handleImagePreview(e, 'fullWidthPostImagePreview'));
 
   // Stack width sliders
   document.getElementById('doubleStackWidth').addEventListener('input', (e) => {
@@ -83,6 +91,7 @@ function setupEventListeners() {
     btn.addEventListener('click', () => {
       hideModal('doublePostModal');
       hideModal('singlePairModal');
+      hideModal('fullWidthPostModal');
       hideModal('newNewsletterModal');
     });
   });
@@ -382,6 +391,12 @@ async function openEditModal(postId) {
     document.getElementById('singlePairStackWidth').value = post.stack_width || 50;
     document.getElementById('singlePairStackWidthValue').textContent = post.stack_width || 50;
     showModal('singlePairModal');
+  } else if (post.layout === 'full-width') {
+    document.getElementById('fullWidthPostId').value = post.id;
+    document.getElementById('fullWidthPostTitle').value = post.title || '';
+    document.getElementById('fullWidthPostContent').value = post.content || '';
+    document.getElementById('fullWidthPostImagePreview').innerHTML = post.image ? `<img src="${post.image}" alt="Preview" style="max-width: 200px;">` : '';
+    showModal('fullWidthPostModal');
   }
 }
 
@@ -414,6 +429,16 @@ function openSinglePairModal() {
   document.getElementById('singlePairStackWidthValue').textContent = 50;
 
   showModal('singlePairModal');
+}
+
+// Open Full Width Post Modal
+function openFullWidthPostModal() {
+  document.getElementById('fullWidthPostId').value = '';
+  document.getElementById('fullWidthPostImage').value = '';
+  document.getElementById('fullWidthPostTitle').value = '';
+  document.getElementById('fullWidthPostContent').value = '';
+  document.getElementById('fullWidthPostImagePreview').innerHTML = '';
+  showModal('fullWidthPostModal');
 }
 
 // Save Double Post
@@ -517,6 +542,49 @@ async function saveSinglePair() {
   }
 }
 
+// Save Full Width Post
+async function saveFullWidthPost() {
+  if (!currentNewsletter) return;
+
+  const postId = document.getElementById('fullWidthPostId').value;
+  const imageFile = document.getElementById('fullWidthPostImage').files[0];
+  const title = document.getElementById('fullWidthPostTitle').value.trim();
+  const content = document.getElementById('fullWidthPostContent').value.trim();
+
+  let image = document.querySelector('#fullWidthPostImagePreview img')?.src || null;
+  if (imageFile) {
+    image = await fileToBase64(imageFile);
+  }
+
+  const postData = {
+    layout: 'full-width',
+    title,
+    content,
+    image,
+    title2: null,
+    content2: null,
+    image2: null,
+    position: postId ? currentPosts.find(p => p.id == postId).position : currentPosts.length,
+    stack_width: 100
+  };
+
+  const url = postId ? `${API_URL}/posts/${postId}` : `${API_URL}/newsletters/${currentNewsletter.id}/posts`;
+  const method = postId ? 'PUT' : 'POST';
+
+  try {
+    await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(postData)
+    });
+
+    hideModal('fullWidthPostModal');
+    loadNewsletter(currentNewsletter.id);
+  } catch (error) {
+    console.error('Errore salvataggio post full-width:', error);
+  }
+}
+
 // Delete Post
 async function deletePost(postId) {
   if (!confirm('Eliminare questo elemento?')) return;
@@ -529,6 +597,70 @@ async function deletePost(postId) {
     loadNewsletter(currentNewsletter.id);
   } catch (error) {
     console.error('Errore eliminazione post:', error);
+  }
+}
+
+// Move Post Up
+async function movePostUp(index) {
+  if (index === 0) return;
+
+  const post = currentPosts[index];
+  const prevPost = currentPosts[index - 1];
+
+  // Scambia le posizioni
+  const tempPosition = post.position;
+  post.position = prevPost.position;
+  prevPost.position = tempPosition;
+
+  try {
+    // Aggiorna entrambi i post
+    await fetch(`${API_URL}/posts/${post.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...post })
+    });
+
+    await fetch(`${API_URL}/posts/${prevPost.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...prevPost })
+    });
+
+    loadNewsletter(currentNewsletter.id);
+  } catch (error) {
+    console.error('Errore spostamento post:', error);
+  }
+}
+
+// Move Post Down
+async function movePostDown(index) {
+  if (index === currentPosts.length - 1) return;
+
+  const post = currentPosts[index];
+  const nextPost = currentPosts[index + 1];
+
+  // Scambia le posizioni
+  const tempPosition = post.position;
+  post.position = nextPost.position;
+  nextPost.position = tempPosition;
+
+  try {
+    // Aggiorna entrambi i post
+    await fetch(`${API_URL}/posts/${post.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...post })
+    });
+
+    await fetch(`${API_URL}/posts/${nextPost.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...nextPost })
+    });
+
+    loadNewsletter(currentNewsletter.id);
+  } catch (error) {
+    console.error('Errore spostamento post:', error);
   }
 }
 
@@ -553,6 +685,8 @@ function renderPosts() {
             ${isCustomWidth ? `<span class="post-layout-badge" style="background: #17a2b8; font-size: 12px;">${leftWidth}% / ${rightWidth}%</span>` : ''}
           </div>
           <div class="post-actions">
+            <button class="btn btn-secondary" onclick="movePostUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+            <button class="btn btn-secondary" onclick="movePostDown(${index})" ${index === currentPosts.length - 1 ? 'disabled' : ''}>↓</button>
             <button class="btn btn-secondary" onclick="openEditModal(${post.id})">Modifica</button>
             <button class="btn btn-danger" onclick="deletePost(${post.id})">Elimina</button>
           </div>
@@ -576,6 +710,8 @@ function renderPosts() {
             ${isCustomWidth ? `<span class="post-layout-badge" style="background: #17a2b8; font-size: 12px;">${leftWidth}% / ${rightWidth}%</span>` : ''}
           </div>
           <div class="post-actions">
+            <button class="btn btn-secondary" onclick="movePostUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+            <button class="btn btn-secondary" onclick="movePostDown(${index})" ${index === currentPosts.length - 1 ? 'disabled' : ''}>↓</button>
             <button class="btn btn-secondary" onclick="openEditModal(${post.id})">Modifica</button>
             <button class="btn btn-danger" onclick="deletePost(${post.id})">Elimina</button>
           </div>
@@ -591,6 +727,26 @@ function renderPosts() {
             <h4 style="margin: 10px 0 5px 0;">${post.title2 || 'Senza titolo'}</h4>
             <div style="font-size: 14px; color: #555;">${post.content2 || ''}</div>
           </div>
+        </div>
+      `;
+    } else if (post.layout === 'full-width') {
+      card.innerHTML = `
+        <div class="post-position">${index + 1}</div>
+        <div class="post-card-header">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="post-layout-badge">Full Width</span>
+          </div>
+          <div class="post-actions">
+            <button class="btn btn-secondary" onclick="movePostUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+            <button class="btn btn-secondary" onclick="movePostDown(${index})" ${index === currentPosts.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="btn btn-secondary" onclick="openEditModal(${post.id})">Modifica</button>
+            <button class="btn btn-danger" onclick="deletePost(${post.id})">Elimina</button>
+          </div>
+        </div>
+        <div style="display: block;">
+          ${post.image ? `<img src="${post.image}" style="width: 100%; border-radius: 6px; margin-bottom: 15px;" alt="Post image">` : ''}
+          <h4>${post.title || 'Senza titolo'}</h4>
+          <div class="post-card-content">${post.content || ''}</div>
         </div>
       `;
     }
@@ -668,6 +824,24 @@ function generateNewsletterHTML() {
                       ${post.image2 ? `<img src="${post.image2}" class="column-img" style="width:100%; height:auto; display:block;">` : ''}
                       <div class="column-title">${post.title2 || ''}</div>
                       <div class="column-text">${post.content2 || ''}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+      `;
+    } else if (post.layout === 'full-width') {
+      // Post full width: immagine e testo a larghezza intera
+      postsHTML += `
+            <!-- Post Full Width -->
+            <tr>
+              <td class="full-width-article" style="padding:0 24px 24px 24px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td valign="top">
+                      ${post.image ? `<img src="${post.image}" width="552" height="300" alt="${post.title || 'Articolo'}" class="full-width-img" style="width:100%; height:auto; display:block;">` : ''}
+                      <div class="full-width-title" style="font-family:Arial,Helvetica,sans-serif; font-size:20px; line-height:1.35; color:#111111; padding-top:12px; font-weight:bold;">${post.title || ''}</div>
+                      <div class="full-width-text" style="font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.55; color:#333333; padding-top:8px; text-align:justify;">${post.content || ''}</div>
                     </td>
                   </tr>
                 </table>

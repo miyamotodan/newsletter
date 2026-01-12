@@ -20,10 +20,6 @@
     .column-img { width:100%; height:auto; display:block; }
     .column-title { font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:1.4; color:#111; padding-top:8px; font-weight: bold;}
     .column-text { font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.5; color:#555; padding-top:6px; text-align: justify;}
-    .full-width-article { padding:0 24px 24px 24px; }
-    .full-width-img { width:100%; height:auto; display:block; }
-    .full-width-title { font-family:Arial,Helvetica,sans-serif; font-size:20px; line-height:1.35; color:#111111; padding-top:12px; font-weight:bold; }
-    .full-width-text { font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.55; color:#333333; padding-top:8px; text-align:justify; }
     .footer { padding:20px 24px 28px 24px; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:1.5; color:#666; background:#f8f9fc; }
     .footer-copy { color:#999; }
 
@@ -107,35 +103,6 @@
               </td>
             </tr>
 			<!-- Due colonne singola immagine -->
-
-            <!-- NUOVO TIPO: Articolo Full-Width (Immagine sopra + Testo sotto) -->
-            <tr>
-              <td class="full-width-article" style="padding:0 24px 24px 24px;">
-                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                  <tr>
-                    <td valign="top">
-                      <!-- Immagine full-width -->
-                      <img src="https://placehold.co/552x300"
-                           width="552"
-                           height="300"
-                           alt="Titolo articolo full-width"
-                           class="full-width-img"
-                           style="width:100%; height:auto; display:block;">
-
-                      <!-- Titolo -->
-                      <div class="full-width-title" style="font-family:Arial,Helvetica,sans-serif; font-size:20px; line-height:1.35; color:#111111; padding-top:12px; font-weight:bold;">
-                        Titolo dell'articolo full-width
-                      </div>
-
-                      <!-- Testo descrittivo -->
-                      <div class="full-width-text" style="font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.55; color:#333333; padding-top:8px; text-align:justify;">
-                        Testo descrittivo dell'articolo che copre tutta la larghezza disponibile. Questo layout è ideale per articoli principali che meritano più visibilità e spazio per contenuti dettagliati.
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
 			
             <!-- CTA 
 			
