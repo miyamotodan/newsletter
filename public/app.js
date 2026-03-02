@@ -696,7 +696,7 @@ function renderPosts() {
             ${post.image ? `<img src="${post.image}" style="width: 100%; border-radius: 6px;" alt="Post image">` : '<div style="width: 100%; height: 150px; background: #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center;">Nessuna immagine</div>'}
           </div>
           <div>
-            <h4>${post.title || 'Senza titolo'}</h4>
+            <div style="font-weight: bold; margin: 10px 0 5px 0;">${post.title || 'Senza titolo'}</div>
             <div class="post-card-content">${post.content || ''}</div>
           </div>
         </div>
@@ -719,12 +719,12 @@ function renderPosts() {
         <div style="display: grid; grid-template-columns: ${leftWidth}% ${rightWidth}%; gap: 20px;">
           <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
             ${post.image ? `<img src="${post.image}" style="width: 100%; margin: 10px 0; border-radius: 6px;" alt="Post 1">` : ''}
-            <h4 style="margin: 10px 0 5px 0;">${post.title || 'Senza titolo'}</h4>
+            <div style="font-weight: bold; margin: 10px 0 5px 0;">${post.title || 'Senza titolo'}</div>
             <div style="font-size: 14px; color: #555;">${post.content || ''}</div>
           </div>
           <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
             ${post.image2 ? `<img src="${post.image2}" style="width: 100%; margin: 10px 0; border-radius: 6px;" alt="Post 2">` : ''}
-            <h4 style="margin: 10px 0 5px 0;">${post.title2 || 'Senza titolo'}</h4>
+            <div style="font-weight: bold; margin: 10px 0 5px 0;">${post.title2 || 'Senza titolo'}</div>
             <div style="font-size: 14px; color: #555;">${post.content2 || ''}</div>
           </div>
         </div>
@@ -745,7 +745,7 @@ function renderPosts() {
         </div>
         <div style="display: block;">
           ${post.image ? `<img src="${post.image}" style="width: 100%; border-radius: 6px; margin-bottom: 15px;" alt="Post image">` : ''}
-          <h4>${post.title || 'Senza titolo'}</h4>
+          <div style="font-weight: bold; margin: 10px 0 5px 0;">${post.title || 'Senza titolo'}</div>
           <div class="post-card-content">${post.content || ''}</div>
         </div>
       `;
@@ -839,7 +839,7 @@ function generateNewsletterHTML() {
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
                     <td valign="top">
-                      ${post.image ? `<img src="${post.image}" width="552" height="300" alt="${post.title || 'Articolo'}" class="full-width-img" style="width:100%; height:auto; display:block;">` : ''}
+                      ${post.image ? `<img src="${post.image}" width="552" height="300" alt="${(post.title || 'Articolo').replace(/<[^>]*>/g, '')}" class="full-width-img" style="width:100%; height:auto; display:block;">` : ''}
                       <div class="full-width-title" style="font-family:Arial,Helvetica,sans-serif; font-size:20px; line-height:1.35; color:#111111; padding-top:12px; font-weight:bold;">${post.title || ''}</div>
                       <div class="full-width-text" style="font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.55; color:#333333; padding-top:8px; text-align:justify;">${post.content || ''}</div>
                     </td>
